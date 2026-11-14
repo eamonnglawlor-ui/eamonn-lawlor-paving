@@ -1290,50 +1290,94 @@ address {
   position: relative;
   display: flex;
   align-items: center;
-  min-height: 26rem;
+  min-height: 32rem;
   overflow: hidden;
+  padding-bottom: 4.25rem;
   background: #2b2b2b;
 }
 
-.craft-hero .hero-photo {
+.hero-drive,
+.hero-bath {
+  position: absolute;
+  inset: 0;
+}
+
+.hero-drive {
+  bottom: 4.25rem;
+}
+
+.hero-bath {
+  top: auto;
+  height: 4.25rem;
+  background: #2b2b2b;
+}
+
+.craft-hero .hero-photo,
+.hero-bath-photo {
   position: absolute;
   inset: 0;
   display: block;
-  margin: 0;
-}
-
-.craft-hero .hero-photo img {
   width: 100%;
   height: 100%;
+  margin: 0;
   object-fit: cover;
   object-position: center 62%;
+}
+
+.hero-bath:has(.hero-bath-photo) .tile-pattern,
+.hero-bath:has(.hero-bath-photo) .hero-bath-label {
+  display: none;
+}
+
+.hero-bath-label {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 1rem;
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-align: center;
 }
 
 .hero-shade {
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, rgba(43, 43, 43, 0.88) 0%, rgba(43, 43, 43, 0.55) 36%, rgba(43, 43, 43, 0) 60%);
+  background: linear-gradient(90deg, rgba(43, 43, 43, 0.88) 0%, rgba(43, 43, 43, 0.55) 42%, rgba(43, 43, 43, 0.15) 100%);
 }
 
 .craft-hero .hero-copy {
   position: relative;
   z-index: 1;
   max-width: 40rem;
-  padding: 2.5rem 0;
+  padding: 2.25rem 0 1.25rem;
 }
 
 .craft-hero h1 {
   margin: 0;
+  max-width: 11em;
   color: #fff;
   font-family: Inter, "Segoe UI", sans-serif;
   font-weight: 800;
-  font-size: 2.5rem;
+  font-size: clamp(2.15rem, 8vw, 2.6rem);
   line-height: 0.98;
   letter-spacing: -0.03em;
 }
 
-.craft-hero h1 span {
-  display: block;
+.hero-tagline {
+  margin: 0 0 0.35rem;
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.craft-hero .hero-call {
+  width: auto;
+  margin-top: 1rem;
 }
 
 .hero-rule {
@@ -1367,6 +1411,29 @@ address {
 .services-intro {
   margin: 0.4rem 0 1.15rem;
   max-width: 36rem;
+}
+
+.service-split {
+  display: grid;
+  gap: 1.35rem;
+}
+
+.service-group-label {
+  margin: 0 0 0.65rem;
+  color: #d9822b;
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.service-tiles {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.home-tile {
+  min-height: 15rem;
 }
 
 .tile {
@@ -1551,13 +1618,53 @@ address {
 
   .craft-hero {
     min-height: 480px;
+    padding-bottom: 0;
+  }
+
+  .hero-drive {
+    inset: 0;
+    clip-path: polygon(0 0, 72% 0, 50% 100%, 0 100%);
+  }
+
+  .hero-bath {
+    top: 0;
+    height: auto;
+    clip-path: polygon(72% 0, 100% 0, 100% 100%, 50% 100%);
+  }
+
+  .hero-bath-label {
+    position: absolute;
+    right: 1.25rem;
+    bottom: 1.75rem;
+    left: auto;
+    width: min(11rem, 28%);
+    height: auto;
+    display: block;
   }
 
   .craft-hero h1 {
-    font-size: 4rem;
+    font-size: 3.75rem;
+  }
+
+  .hero-tagline {
+    font-size: 1.45rem;
   }
 
   .hero-sub {
     font-size: 1.25rem;
+  }
+
+  .service-split {
+    grid-template-columns: 3fr 1fr;
+    align-items: start;
+    gap: 0.65rem;
+  }
+
+  .service-tiles-out {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .home-tile {
+    min-height: 18rem;
   }
 }
