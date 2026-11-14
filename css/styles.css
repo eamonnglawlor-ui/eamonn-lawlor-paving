@@ -233,8 +233,8 @@ h2 {
 }
 
 .logo {
-  width: 46px;
-  height: 46px;
+  height: 2.15rem;
+  width: auto;
   flex: none;
   display: block;
   background: transparent;
