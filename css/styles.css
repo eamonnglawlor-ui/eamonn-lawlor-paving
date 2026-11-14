@@ -7,7 +7,7 @@
   --cream: #f6f3ee;
   --cream-2: #fffdf9;
   --white: #f6f3ee;
-  --orange: #d9822b;
+  --orange: #b6703f;
   --orange-deep: #8a4b10;
   --orange-ink: #1a1208;
   --line: rgba(246, 243, 238, 0.16);
@@ -161,8 +161,8 @@ h2 {
 
 .btn:hover,
 .btn:focus-visible {
-  background: #c47322;
-  border-color: #c47322;
+  background: #b87848;
+  border-color: #b87848;
   color: var(--orange-ink);
 }
 
@@ -330,7 +330,40 @@ h2 {
 }
 
 .hero-visual {
-  display: none;
+  display: block;
+}
+
+.experience {
+  margin: 0 0 0.85rem;
+  font-size: clamp(1.35rem, 4vw, 1.75rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--orange);
+  line-height: 1.15;
+}
+
+.photo-group + .photo-group {
+  margin-top: 2rem;
+}
+
+.photo-group h2 {
+  margin: 0 0 0.75rem;
+}
+
+.service-photo {
+  display: block;
+  margin-top: 0.75rem;
+}
+
+.service-photo img,
+.gallery a img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.shot {
+  scroll-margin-top: 8.5rem;
 }
 
 .hero-logo {
@@ -579,8 +612,8 @@ h2 {
 }
 
 .lightbox button:hover {
-  background: #c47322;
-  border-color: #c47322;
+  background: #b87848;
+  border-color: #b87848;
 }
 
 body.lightbox-open {
