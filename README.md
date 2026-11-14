@@ -29,8 +29,8 @@ That domain has not been bought for this project. Replace it in those files befo
 ## Other placeholders
 
 - Service area copy says “Limerick and surrounding areas”, with the HTML comment `<!-- PLACEHOLDER: confirm service area with Eamonn -->` beside it.
-- The accent orange is `#B6703F`, sampled from the orange diamond on the business-card logo. The card photographs are not in the published site.
-- Job photographs are responsive WebP files, plus JPEG fallbacks, in `assets/img/gallery/`. The business-card photographs are not published.
+- The accent orange is `#D9822B`, taken from the business-card logo. The logo mark is `brand/logo-dark-bg.svg` on charcoal and `brand/logo-light-bg.svg` on light backgrounds. `brand/logo-card.png` stays in the repo and is not used on the pages.
+- All 23 job photographs are responsive WebP files, plus JPEG fallbacks, in `assets/img/gallery/`. None of them show porcelain, microcement or artificial grass, so those parts of the gallery say “Photos coming soon”.
 
 ## Content
 

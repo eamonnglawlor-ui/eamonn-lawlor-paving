@@ -9,8 +9,15 @@
   var closeBtn = dialog.querySelector(".lightbox-close");
   var prevBtn = dialog.querySelector(".lightbox-prev");
   var nextBtn = dialog.querySelector(".lightbox-next");
+  var items = buttons;
   var index = 0;
   var lastFocus = null;
+
+  function visibleButtons() {
+    return buttons.filter(function (button) {
+      return button.offsetParent !== null;
+    });
+  }
 
   function dataFor(button) {
     var thumb = button.querySelector("img");
@@ -24,8 +31,11 @@
   }
 
   function show(nextIndex) {
-    index = (nextIndex + buttons.length) % buttons.length;
-    var data = dataFor(buttons[index]);
+    items = visibleButtons();
+    if (!items.length) return;
+    index = (nextIndex + items.length) % items.length;
+    var current = items[index];
+    var data = dataFor(current);
     var failed = false;
     img.alt = data.alt;
     if (data.width) img.width = Number(data.width);
@@ -37,8 +47,8 @@
       }
     };
     img.src = data.webp || data.jpg;
-    caption.textContent = data.alt;
-    var single = buttons.length < 2;
+    caption.textContent = current.getAttribute("data-caption") || data.alt;
+    var single = items.length < 2;
     prevBtn.hidden = single;
     nextBtn.hidden = single;
   }
@@ -65,9 +75,10 @@
     if (lastFocus && typeof lastFocus.focus === "function") lastFocus.focus();
   }
 
-  buttons.forEach(function (button, i) {
+  buttons.forEach(function (button) {
     button.addEventListener("click", function () {
-      openAt(i);
+      items = visibleButtons();
+      openAt(items.indexOf(button));
     });
   });
 
@@ -82,6 +93,21 @@
   dialog.addEventListener("click", function (event) {
     if (event.target === dialog) close();
   });
+
+  var touchX = 0;
+  var touchY = 0;
+  dialog.addEventListener("touchstart", function (event) {
+    if (!event.changedTouches || !event.changedTouches[0]) return;
+    touchX = event.changedTouches[0].clientX;
+    touchY = event.changedTouches[0].clientY;
+  }, { passive: true });
+  dialog.addEventListener("touchend", function (event) {
+    if (dialog.hidden || !event.changedTouches || !event.changedTouches[0]) return;
+    var dx = event.changedTouches[0].clientX - touchX;
+    var dy = event.changedTouches[0].clientY - touchY;
+    if (Math.abs(dx) < 48 || Math.abs(dx) < Math.abs(dy)) return;
+    show(dx < 0 ? index + 1 : index - 1);
+  }, { passive: true });
 
   document.addEventListener("keydown", function (event) {
     if (dialog.hidden) return;
