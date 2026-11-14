@@ -1,0 +1,7 @@
+# PLACEHOLDER DOMAIN: www.eamonnlawlorpaving.ie has not been bought.
+# Replace this host in robots.txt, sitemap.xml and the page canonical URLs before launch.
+
+User-agent: *
+Allow: /
+
+Sitemap: https://www.eamonnlawlorpaving.ie/sitemap.xml
