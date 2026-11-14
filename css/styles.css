@@ -1380,6 +1380,135 @@ address {
   margin-bottom: 0.4rem;
 }
 
+.btn-line {
+  background: transparent;
+  color: #1a1208;
+  border-color: #2b2b2b;
+}
+
+.btn-line:hover,
+.btn-line:focus-visible {
+  background: #2b2b2b;
+  color: #f2efea;
+}
+
+.on-dark .btn-line,
+.strip .btn-line {
+  color: #fff;
+  border-color: #d9822b;
+}
+
+.on-dark .btn-line:hover,
+.on-dark .btn-line:focus-visible,
+.strip .btn-line:hover,
+.strip .btn-line:focus-visible {
+  background: #d9822b;
+  color: #1a1208;
+}
+
+.compare-section[hidden] {
+  display: none;
+}
+
+.compare {
+  position: relative;
+  height: 22rem;
+  overflow: hidden;
+  border-radius: 8px;
+  background: #2b2b2b;
+  touch-action: none;
+  user-select: none;
+}
+
+.compare-after,
+.compare-before {
+  position: absolute;
+  inset: 0;
+}
+
+.compare-before {
+  width: 50%;
+  overflow: hidden;
+  border-right: 2px solid #d9822b;
+}
+
+.compare-pattern-before {
+  background:
+    linear-gradient(160deg, rgba(217, 130, 43, 0.35), rgba(20, 18, 16, 0.15) 50%),
+    repeating-linear-gradient(45deg, #2b2b2b 0 14px, #3a322c 14px 28px);
+}
+
+.compare-pill {
+  position: absolute;
+  top: 1rem;
+  z-index: 2;
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+  background: #2b2b2b;
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.compare-pill-before {
+  left: 1rem;
+}
+
+.compare-pill-after {
+  right: 1rem;
+}
+
+.compare-range {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: ew-resize;
+}
+
+.compare-handle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 2;
+  width: 48px;
+  height: 48px;
+  border: 3px solid #fff;
+  border-radius: 50%;
+  background: #d9822b;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.meet-grid {
+  display: grid;
+  gap: 1.25rem;
+  align-items: center;
+}
+
+.portrait {
+  position: relative;
+  min-height: 18rem;
+  overflow: hidden;
+  border-radius: 8px;
+  background: #2b2b2b;
+}
+
+@media (min-width: 800px) {
+  .meet-grid {
+    grid-template-columns: minmax(14rem, 18rem) minmax(0, 1fr);
+  }
+
+  .compare {
+    height: 28rem;
+  }
+}
+
 @media (min-width: 860px) {
   .header-bar {
     grid-template-columns: auto 1fr auto;
