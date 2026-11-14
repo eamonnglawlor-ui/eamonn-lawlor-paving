@@ -424,6 +424,23 @@ h2 {
   margin-top: 0.75rem;
 }
 
+.resin-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.45rem;
+  margin-top: 0.75rem;
+}
+
+.resin-row a {
+  display: block;
+}
+
+.resin-row img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
 .service-photo img,
 .gallery a img {
   display: block;
@@ -913,6 +930,10 @@ address {
   .cards,
   .specialities {
     grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  .resin-row {
+    grid-template-columns: repeat(5, 1fr);
   }
 
   .footer-grid {

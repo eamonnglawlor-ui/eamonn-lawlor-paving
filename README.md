@@ -30,7 +30,7 @@ That domain has not been bought for this project. Replace it in those files befo
 
 - Service area copy says “Limerick and surrounding areas”, with the HTML comment `<!-- PLACEHOLDER: confirm service area with Eamonn -->` beside it.
 - The accent orange is `#B6703F`, sampled from the orange diamond on the business-card logo. The card photographs are not in the published site.
-- Job photographs are the optimised JPEG and WebP files in `images/full` (long edge at most 1600px) and `images/thumbs` (long edge 600px).
+- Job photographs are responsive WebP files, plus JPEG fallbacks, in `assets/img/gallery/`. The business-card photographs are not published.
 
 ## Content
 
