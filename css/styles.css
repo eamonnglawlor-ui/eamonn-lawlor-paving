@@ -1305,7 +1305,7 @@ address {
   align-items: center;
   min-height: 32rem;
   overflow: hidden;
-  padding-bottom: 4.25rem;
+  padding-bottom: 0;
   background: #2b2b2b;
 }
 
@@ -1316,7 +1316,7 @@ address {
 }
 
 .hero-drive {
-  bottom: 4.25rem;
+  bottom: 0;
 }
 
 .hero-bath {
@@ -1372,7 +1372,7 @@ address {
 
 .craft-hero h1 {
   margin: 0;
-  max-width: 11em;
+  max-width: 12em;
   color: #fff;
   font-family: Inter, "Segoe UI", sans-serif;
   font-weight: 800;
@@ -1388,9 +1388,15 @@ address {
   font-weight: 700;
 }
 
-.craft-hero .hero-call {
+.craft-hero .hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.15rem;
+}
+
+.craft-hero .hero-actions .btn {
   width: auto;
-  margin-top: 1rem;
 }
 
 .hero-rule {
@@ -1660,13 +1666,17 @@ address {
 
   .hero-drive {
     inset: 0;
-    clip-path: polygon(0 0, 72% 0, 50% 100%, 0 100%);
+    clip-path: none;
   }
 
+  /* HIDDEN-BATHROOM: restore the diagonal split with
+     clip-path: polygon(0 0, 72% 0, 50% 100%, 0 100%) on .hero-drive
+     and clip-path: polygon(72% 0, 100% 0, 100% 100%, 50% 100%) on .hero-bath
+     when bathroom photos arrive. */
   .hero-bath {
     top: 0;
     height: auto;
-    clip-path: polygon(72% 0, 100% 0, 100% 100%, 50% 100%);
+    clip-path: none;
   }
 
   .hero-bath-label {
