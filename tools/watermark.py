@@ -5,10 +5,13 @@ The mark is baked into the pixels: a small render of brand/logo-dark-bg.svg
 (the PNG export sitting next to that SVG) plus the words "Eamonn Lawlor Paving",
 bottom-right, at about 35% opacity, with a soft shadow.
 
-Unwatermarked originals are not kept in the published gallery. They remain in
-git history from the commit before this stamp. Run this on new photographs
-before they are copied into assets/img/gallery/. Running it again on an
-already stamped file is skipped when the file still carries the marker.
+The logo is drawn in white from the alpha of brand/logo-dark-bg.png, with
+"Eamonn Lawlor Paving" in the bundled Inter SemiBold. The white mark is about
+60% opacity, over a soft dark backing, about 22% of the image width, inset 3%.
+
+Stamp clean photographs only. Files that already carry an elp-watermark marker
+are skipped so a second run does not stamp on top of a stamp. Unwatermarked
+originals of the first gallery stay in git history.
 
 Examples:
   python3 tools/watermark.py
@@ -28,23 +31,25 @@ from PIL import Image, ImageDraw, ImageFilter, ImageFont
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_GALLERY = ROOT / "assets" / "img" / "gallery"
 LOGO_PNG = ROOT / "brand" / "logo-dark-bg.png"
+FONT_PATH = ROOT / "tools" / "fonts" / "Inter-SemiBold.ttf"
 TEXT = "Eamonn Lawlor Paving"
-MARKER = b"elp-watermark-v1"
-WIDTH_FRACTION = 0.20
-OPACITY = 0.40
-FONT_CANDIDATES = (
-    Path("/usr/share/fonts/truetype/macos/Inter-SemiBold.ttf"),
-    Path("/usr/share/fonts/truetype/macos/Inter-Bold.ttf"),
-    Path("/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf"),
-    Path("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"),
-)
+MARKER = b"elp-watermark-v2"
+WIDTH_FRACTION = 0.22
+MARGIN_FRACTION = 0.03
+OPACITY = 0.60
 
 
 def find_font() -> Path:
-    for path in FONT_CANDIDATES:
-        if path.is_file():
-            return path
-    raise SystemExit("No bold sans font found for the watermark text.")
+    if FONT_PATH.is_file():
+        return FONT_PATH
+    raise SystemExit(f"Bundled font is missing: {FONT_PATH}")
+
+
+def as_white(image: Image.Image) -> Image.Image:
+    """Keep the logo shape, paint it white."""
+    alpha = image.getchannel("A")
+    white = Image.new("L", image.size, 255)
+    return Image.merge("RGBA", (white, white, white, alpha))
 
 
 def crop_to_alpha(image: Image.Image) -> Image.Image:
@@ -92,7 +97,7 @@ def build_mark(logo: Image.Image, target_width: int, font_path: Path) -> Image.I
     """Logo plus two lines of white text, about target_width pixels wide."""
     logo_width = max(18, int(target_width * 0.34))
     logo_height = max(18, int(logo_width * logo.height / logo.width))
-    logo_small = logo.resize((logo_width, logo_height), Image.Resampling.LANCZOS)
+    logo_small = as_white(logo.resize((logo_width, logo_height), Image.Resampling.LANCZOS))
     text_width = max(24, target_width - logo_width - max(4, target_width // 18))
     font = fit_font("Eamonn Lawlor", text_width, font_path)
     text = render_lines(["Eamonn Lawlor", "Paving"], font)
@@ -113,43 +118,48 @@ def with_opacity(image: Image.Image, opacity: float) -> Image.Image:
     return Image.merge("RGBA", (red, green, blue, alpha))
 
 
-def soft_shadow(mark: Image.Image) -> tuple[Image.Image, tuple[int, int]]:
-    """Return a blurred black shadow and the paste offset of the mark on it."""
-    blur = max(2, mark.width // 36)
-    pad = blur * 4
-    alpha = mark.getchannel("A").point(lambda value: int(value * 0.85))
-    shadow = Image.new("RGBA", mark.size, (0, 0, 0, 0))
-    shadow.putalpha(alpha)
-    canvas = Image.new("RGBA", (mark.width + pad * 2, mark.height + pad * 2), (0, 0, 0, 0))
-    canvas.paste(shadow, (pad + max(1, blur // 2), pad + max(1, blur // 2)), shadow)
-    canvas = canvas.filter(ImageFilter.GaussianBlur(blur))
-    return canvas, (pad, pad)
+def dark_backing(mark: Image.Image) -> tuple[Image.Image, tuple[int, int]]:
+    """Soft dark chip behind the white mark so it reads on light paving and grass."""
+    pad = max(6, mark.width // 16)
+    blur = max(2, mark.width // 30)
+    width = mark.width + pad * 2 + blur * 2
+    height = mark.height + pad * 2 + blur * 2
+    plate = Image.new("RGBA", (width, height), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(plate)
+    radius = max(8, mark.height // 2)
+    draw.rounded_rectangle(
+        (blur, blur, width - blur - 1, height - blur - 1),
+        radius=radius,
+        fill=(0, 0, 0, 200),
+    )
+    plate = plate.filter(ImageFilter.GaussianBlur(blur))
+    return plate, (blur + pad, blur + pad)
 
 
 def stamp(image: Image.Image, logo: Image.Image, font_path: Path) -> Image.Image:
     base = image.convert("RGBA")
-    target = max(72, int(base.width * WIDTH_FRACTION))
-    target = min(target, int(base.width * 0.22))
-    mark = with_opacity(build_mark(logo, target, font_path), OPACITY)
-    shadow, offset = soft_shadow(mark)
-    margin = max(10, int(base.width * 0.028))
+    target = max(96, int(round(base.width * WIDTH_FRACTION)))
+    full = build_mark(logo, target, font_path)
+    backing, offset = dark_backing(full)
+    mark = with_opacity(full, OPACITY)
+    margin = max(8, int(round(base.width * MARGIN_FRACTION)))
     layer = Image.new("RGBA", base.size, (0, 0, 0, 0))
     x = base.width - margin - offset[0] - mark.width
     y = base.height - margin - offset[1] - mark.height
-    layer.paste(shadow, (x - offset[0] + max(1, mark.width // 80), y - offset[1] + max(1, mark.width // 80)), shadow)
+    layer.paste(backing, (x - offset[0], y - offset[1]), backing)
     layer.paste(mark, (x, y), mark)
     return Image.alpha_composite(base, layer)
 
 
 def already_stamped(image: Image.Image) -> bool:
-    comment = image.info.get("comment")
-    if comment == MARKER or comment == MARKER.decode():
-        return True
-    xmp = image.info.get("xmp")
-    if xmp == MARKER or (isinstance(xmp, bytes) and MARKER in xmp):
-        return True
-    exif = image.info.get("exif")
-    return isinstance(exif, (bytes, str)) and MARKER in (exif if isinstance(exif, bytes) else exif.encode())
+    chunks = []
+    for key in ("comment", "xmp", "exif"):
+        value = image.info.get(key)
+        if isinstance(value, str):
+            value = value.encode()
+        if isinstance(value, bytes):
+            chunks.append(value)
+    return b"elp-watermark" in b"".join(chunks)
 
 
 def save_like(image: Image.Image, destination: Path, original_size: int) -> None:
